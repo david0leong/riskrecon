@@ -1,0 +1,32 @@
+.message-list {
+  width: 1000px;
+  margin: 50px auto;
+
+  &__header {
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 100px;
+  }
+
+  &__body {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 1rem;
+
+    .body__header {
+      padding: 0.5rem 0;
+
+      .header__title {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+
+      .header__info {
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

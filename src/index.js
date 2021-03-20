@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import MessageList from './components/message-list'
+import MessageList from './components/MessageList'
 import './styles/main.scss'
 
-const NewApp = require('./components/message-list').default
+const NewApp = require('./components/MessageList').default
 
 function renderApp(App) {
   ReactDOM.render(<App />, document.getElementById('root'))
@@ -13,7 +13,7 @@ function renderApp(App) {
 renderApp(MessageList)
 
 if (module.hot) {
-  module.hot.accept('./components/message-list', () => {
+  module.hot.accept('./components/MessageList', () => {
     renderApp(NewApp)
   })
 }
