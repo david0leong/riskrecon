@@ -18,15 +18,22 @@ const MessageList = () => {
     () => groupBy([].concat(messages).reverse(), 'priority'), // Reverse order and group by priority
     [messages]
   )
-  const handleReset = useCallback(() => {
-    setMessages([])
-  }, [])
-
   const toggleApiStart = useCallback(() => {
     isApiStarted ? apiRef.current.stop() : apiRef.current.start()
 
     setIsApiStarted(!isApiStarted)
   }, [isApiStarted, setIsApiStarted])
+
+  const handleReset = useCallback(() => {
+    setMessages([])
+  }, [])
+
+  const handleDelete = useCallback(
+    messageToDelete => {
+      setMessages(messages.filter(message => message.id !== messageToDelete.id))
+    },
+    [messages, setMessages]
+  )
 
   useEffect(() => {
     // Initialize api when mounted
@@ -37,7 +44,7 @@ const MessageList = () => {
     })
 
     toggleApiStart()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="message-list">
@@ -79,6 +86,7 @@ const MessageList = () => {
                   <button
                     type="button"
                     className="btn btn-link btn-sm text-dark"
+                    onClick={() => handleDelete(message)}
                   >
                     Clear
                   </button>
