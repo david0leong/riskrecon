@@ -1,13 +1,22 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import groupBy from 'lodash.groupby'
 
 import Api from '../../api'
 import './style.scss'
 
-const MESSAGE_TYPES = ['error', 'warning', 'info']
+const MESSAGE_TYPES = {
+  1: 'Error',
+  2: 'Warning',
+  3: 'Info',
+}
 
 const MessageList = () => {
   const apiRef = useRef()
   const [messages, setMessages] = useState([])
+  const groupedMessages = useMemo(
+    () => groupBy([].concat(messages).reverse(), 'priority'), // Reverse order and group by priority
+    [messages]
+  )
   const handleReset = useCallback(() => {
     setMessages([])
   }, [])
@@ -40,12 +49,17 @@ const MessageList = () => {
       </div>
 
       <div className="message-list__body">
-        {MESSAGE_TYPES.map(messageType => (
-          <div className="body__header">
-            <h4 className="header__title">{messageType}</h4>
-            <p className="header__info">Count 2</p>
-          </div>
-        ))}
+        {Object.keys(MESSAGE_TYPES).map(key => {
+          const messageType = MESSAGE_TYPES[key]
+          const messageCount = (groupedMessages[key] || []).length
+
+          return (
+            <div className="body__header" key={key}>
+              <h4 className="header__title">{messageType}</h4>
+              <p className="header__info">Count: {messageCount}</p>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
