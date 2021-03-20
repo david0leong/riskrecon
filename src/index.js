@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import MessageList from './components/message-list'
+import './styles/main.scss'
 
 const NewApp = require('./components/message-list').default
 
