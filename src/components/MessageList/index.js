@@ -4,14 +4,15 @@ import groupBy from 'lodash.groupby'
 import Api from '../../api'
 import './style.scss'
 
-const MESSAGE_TYPES = {
-  1: 'Error',
-  2: 'Warning',
-  3: 'Info',
+const MESSAGE_PRIORITIES = {
+  1: 'error',
+  2: 'warning',
+  3: 'info',
 }
 
 const MessageList = () => {
   const apiRef = useRef()
+  const [isApiStarted, setIsApiStarted] = useState(false)
   const [messages, setMessages] = useState([])
   const groupedMessages = useMemo(
     () => groupBy([].concat(messages).reverse(), 'priority'), // Reverse order and group by priority
@@ -21,42 +22,68 @@ const MessageList = () => {
     setMessages([])
   }, [])
 
-  const isApiStarted = apiRef.current && apiRef.current.isStarted()
-  const handleClick = () => {
+  const toggleApiStart = useCallback(() => {
     isApiStarted ? apiRef.current.stop() : apiRef.current.start()
-  }
+
+    setIsApiStarted(!isApiStarted)
+  }, [isApiStarted, setIsApiStarted])
 
   useEffect(() => {
+    // Initialize api when mounted
     apiRef.current = new Api({
       messageCallback(message) {
         setMessages(prevMessages => [...prevMessages, message])
       },
     })
 
-    apiRef.current.start()
+    toggleApiStart()
   }, [])
 
   return (
     <div className="message-list">
       <div className="message-list__header">
-        <button type="button" className="btn btn-success" onClick={handleClick}>
+        <button
+          type="button"
+          className="btn btn-success text-uppercase"
+          onClick={toggleApiStart}
+        >
           {isApiStarted ? 'Stop' : 'Start'}
         </button>
 
-        <button type="button" className="btn btn-danger" onClick={handleReset}>
+        <button
+          type="button"
+          className="btn btn-danger text-uppercase"
+          onClick={handleReset}
+        >
           Clear
         </button>
       </div>
 
       <div className="message-list__body">
-        {Object.keys(MESSAGE_TYPES).map(key => {
-          const messageType = MESSAGE_TYPES[key]
-          const messageCount = (groupedMessages[key] || []).length
+        {Object.keys(MESSAGE_PRIORITIES).map(key => {
+          const priority = MESSAGE_PRIORITIES[key]
+          const messages = groupedMessages[key] || []
+          const count = messages.length
 
           return (
-            <div className="body__header" key={key}>
-              <h4 className="header__title">{messageType}</h4>
-              <p className="header__info">Count: {messageCount}</p>
+            <div key={key} className="message-list__column">
+              <div key={key} className="column__header">
+                <h4 className="header__title">{priority}</h4>
+                <p className="header__info">Count: {count}</p>
+              </div>
+
+              {messages.map(message => (
+                <div key={message.id} className={`column__card ${priority}`}>
+                  <p className="card__message">{message.message}</p>
+
+                  <button
+                    type="button"
+                    className="btn btn-link btn-sm text-dark"
+                  >
+                    Clear
+                  </button>
+                </div>
+              ))}
             </div>
           )
         })}

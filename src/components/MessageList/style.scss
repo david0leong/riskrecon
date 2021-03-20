@@ -1,31 +1,61 @@
 .message-list {
   width: 1000px;
-  margin: 50px auto;
+  margin: 3rem auto;
 
   &__header {
     display: grid;
     grid-template-columns: repeat(2, 100px);
     gap: 0.5rem;
     justify-content: center;
-    margin-bottom: 100px;
+    margin-bottom: 2rem;
   }
 
   &__body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem 1rem;
+    gap: 1rem;
+  }
 
-    .body__header {
+  &__column {
+    font-size: 0.9rem;
+
+    .column__header {
       padding: 0.5rem 0;
 
       .header__title {
         margin: 0;
         font-size: 1.25rem;
+        text-transform: capitalize;
       }
 
       .header__info {
         margin: 0;
-        font-size: 0.9rem;
+      }
+    }
+
+    .column__card {
+      display: flex;
+      justify-content: space-between;
+      border-radius: 0.25rem;
+      box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
+      margin-bottom: 0.5rem;
+      padding: 1rem;
+      min-height: 2rem;
+
+      .card__message {
+        margin: 0;
+      }
+
+      &.error {
+        background: #f56236;
+      }
+
+      &.warning {
+        background: #fce788;
+      }
+
+      &.info {
+        background: #88fca3;
       }
     }
   }
